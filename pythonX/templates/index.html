@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        textarea {
+            width: 60%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gemini AI Chat</h1>
+    <textarea id="userMessage" placeholder="Enter your message here..."></textarea><br>
+    <button onclick="sendMessage()">Send</button>
+    <p id="response"></p>
+
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("userMessage").value;
+            if (!message) {
+                alert("Please enter a message.");
+                return;
+            }
+
+            const responseElement = document.getElementById("response");
+            responseElement.innerText = "Generating response...";
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                responseElement.innerText = data.response || "Error: " + data.error;
+            } catch (error) {
+                responseElement.innerText = "An error occurred: " + error;
+            }
+        }
+    </script>
+</body>
+</html>
